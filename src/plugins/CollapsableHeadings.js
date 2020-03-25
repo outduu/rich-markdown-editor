@@ -6,7 +6,10 @@ export default function CollapsableHeadings() {
   const queries = {
     getPathForHeadingNode(editor: Editor, node: Node) {
       const slugish = headingToSlug(editor.value.document, node);
-      return `${editor.props.id || window.location.pathname}#${slugish}`;
+      // TODO handle window
+      // const pathName = typeof window !== "undefined" ? window.location.pathname : "";
+      // return `${editor.props.id || pathName}#${slugish}`;
+      return `${editor.props.id}#${slugish}`;
     },
   };
 
@@ -84,8 +87,8 @@ export default function CollapsableHeadings() {
     if (node.type.match(/heading/)) {
       const collapsed = node.data.get("collapsed");
       const persistKey = editor.getPathForHeadingNode(node);
-      const persistedState = localStorage.getItem(persistKey);
-      const shouldBeCollapsed = persistedState === "collapsed";
+      const persistedState = typeof localStorage !== 'undefined' ? localStorage.getItem(persistKey) : '';
+      const shouldBeCollapsed = persistedState === 'collapsed';
 
       // ensures that on load content under collapsed headings is correctly hidden
       if (shouldBeCollapsed && !collapsed) {
